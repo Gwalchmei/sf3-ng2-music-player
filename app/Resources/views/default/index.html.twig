@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <my-app>Loading...</my-app>
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('node_modules/es6-shim/es6-shim.min.js') }}"></script>
+    <script src="{{ asset('node_modules/systemjs/dist/system-polyfills.js') }}"></script>
+
+    <script src="{{ asset('node_modules/angular2/bundles/angular2-polyfills.js') }}"></script>
+    <script src="{{ asset('node_modules/systemjs/dist/system.src.js') }}"></script>
+    <script src="{{ asset('node_modules/rxjs/bundles/Rx.js') }}"></script>
+    <script src="{{ asset('node_modules/angular2/bundles/angular2.dev.js') }}"></script>
+
+    <script src="{{ asset('node_modules/angular2/bundles/http.dev.js') }}"></script>
+
+    <script>
+      System.config({
+        packages: {
+          app: {
+            format: 'register',
+            defaultExtension: 'js',
+              baseUrl: "{{ asset('') }}"
+          }
+        }
+      });
+      System.import("{{ asset('app/main.js') }}")
+            .then(null, console.error.bind(console));
+    </script>
+{% endblock %}

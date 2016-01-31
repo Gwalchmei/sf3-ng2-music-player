@@ -1,0 +1,43 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        in_memory:
+            memory:
+                users:
+                    gwalchmei:
+                        password: %gwalchmei_password%
+                        roles: 'ROLE_ADMIN'
+    encoders:
+        Symfony\Component\Security\Core\User\User:
+            algorithm: bcrypt
+            cost: 12
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: ~
+            # activate different ways to authenticate
+
+            #http_basic: ~
+            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                default_target_path: /login_success
+                always_use_default_target_path: true
+                use_forward: true # return 401 error instead of redirect 302
+            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+            logout:
+                path: /logout
+                target: /logout_success
