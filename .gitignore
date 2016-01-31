@@ -19,3 +19,4 @@
 !/web/app/*.ts
 /web/npm-debug.log
 /web/music/*
+.idea/workspace.xml
