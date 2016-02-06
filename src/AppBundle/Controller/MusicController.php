@@ -45,25 +45,28 @@ class MusicController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="get_music", requirements={"id" = "[0-9]+"})
+     * @Route("/", name="get_music")
      * @Method("GET")
-     * @param $id
      * @return JsonResponse
      */
-    public function getAction($id)
+    public function getAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
-        $music = $this->getDoctrine()->getManager()->getRepository("AppBundle:Music")->find($id);
-        if (!$music instanceof Music) {
-            throw $this->createNotFoundException('No music found for id '.$id);
+        $musics = $this->getDoctrine()->getManager()->getRepository("AppBundle:Music")->myFindAll(
+            $request->get('pid'),
+            $request->get('page')
+        );
+        $output = array();
+        foreach ($musics as $music) {
+            $output[$music->getId()] = array(
+                'id' => $music->getId(),
+                'name' => $music->getName(),
+                'playlists' => $music->getPlaylists()->map(function($p){return $p->getId();})->toArray()
+            );
         }
 
         $response = new JsonResponse();
-        $response->setData(
-            array(
-                'data' => array("id" => $music->getId(), "name" => $music->getName())
-            )
-        );
+        $response->setData(array('data' => $output));
 
         return $response;
     }
