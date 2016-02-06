@@ -35,8 +35,8 @@ class Music
 
     /**
      * @var string
-     * @ORM\Column(type="string")
-     * @Assert\File(mimeTypes={'audio/mpeg'}
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\File(mimeTypes={"audio/mpeg"})
      */
     protected $path;
 
@@ -68,7 +68,7 @@ class Music
     }
 
     /**
-     * @param $file
+     * @param $path
      * @return $this
      */
     public function setPath($path)
