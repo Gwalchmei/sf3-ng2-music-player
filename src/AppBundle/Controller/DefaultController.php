@@ -23,22 +23,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/stream/{filename}", name="stream_music")
-     * @param string $filename
-     * @return StreamedResponse
-     */
-    public function streamAction($filename)
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
-        $file = 'music/'.$filename;
-        return new StreamedResponse(
-            function () use ($file) {
-                readfile($file);
-            }, 200, array('Content-Type' => 'audio/mpeg')
-        );
-    }
-
-    /**
      * @Route("/list/", name="list_music")
      */
     public function listAction()
