@@ -8,6 +8,7 @@ import {BASEURL} from './base-url.js';
 @Injectable()
 export class MusicService {
     musics$: Observable<Array<Music>>;
+    private _lastPid: number;
     private _musicsObserver: any;
     private _dataStore: {
         musics: Array<Music>
@@ -20,14 +21,22 @@ export class MusicService {
         this._dataStore = { musics: [] };
     }
 
-    loadMusics(id?: number) {
-        var url = BASEURL+"music/";
+    loadMusics(id?: number, page?: number) {
+        var url = BASEURL+"music/?";
         if (id !== undefined) {
-            url = url+"?pid="+id;
+            url = url+"pid="+id+"&";
+        }
+        if (page !== undefined) {
+            url = url+"page="+page+"&";
         }
         this._http.get(url).map(response => <Music[]> response.json().data).subscribe(musics => {
             // Update data store
-            this._dataStore.musics = musics;
+            if (id === this._lastPid) {
+                musics.forEach((music, i) => {this._dataStore.musics.push(music);})
+            } else {
+                this._dataStore.musics = musics;
+            }
+            this._lastPid = id;
 
             // Push the new list of musics into the Observable stream
             this._musicsObserver.next(this._dataStore.musics);

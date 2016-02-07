@@ -34,6 +34,7 @@ import {BASEURL} from './base-url.js';
                         class="col-sm-6"
                         (selectedMusicChanged)="onMusicSelect($event)"
                         (selectedPlaylistChanged)="onPlaylistSelect($event)"
+                        (loadMoreAsked)="loadMore($event)"
                         [playlists]="playlists"
                         [musics]="musics"
                         [selectedMusic]="selectedMusic"
@@ -58,6 +59,7 @@ import {BASEURL} from './base-url.js';
 })
 export class AppComponent implements OnInit{
     public playlists: Playlist[];
+    public selectedPlaylist: Playlist;
     public musics: Music[];
     public selectedMusic: Music;
     public user: User;
@@ -66,35 +68,53 @@ export class AppComponent implements OnInit{
 
     constructor(private _http: Http, private _musicService: MusicService, private _playlistService: PlaylistService){}
 
-    onMusicSelect(music: Music) {
+    onMusicSelect(music: Music)
+    {
         this.selectedMusic = music;
     }
 
-    onPlaylistSelect(playlist: Playlist) {
-        if (playlist === undefined) {
-            this._musicService.loadMusics();
-        } else {
-            this._musicService.loadMusics(playlist.id);
-        }
+    onPlaylistSelect(playlist: Playlist)
+    {
+        this.selectedPlaylist = playlist;
+        this.loadMusics(this.selectedPlaylist.id);
     }
 
-    onMusicEnd(music: Music) {
+    onMusicEnd(music: Music)
+    {
         var indexOfNext = this.musics.indexOf(music)+1;
-        if (indexOfNext == this.musics.length) {
-            this.selectedMusic = this.musics[0];
-        } else {
+        var musicLength = this.musics.length;
+        if (indexOfNext < musicLength) {
             this.selectedMusic = this.musics[indexOfNext];
+            /*if ((musicLength%20 === 0) && (musicLength-indexOfNext < 5)) {
+                this.loadMore(musicLength);
+            }*/
+        } else {
+            this.selectedMusic = this.musics[0];
         }
+
     }
 
-    updateUser(user: User) {
+    loadMore(length: number)
+    {
+        var page = Math.floor(length/20);
+        this.loadMusics(this.selectedPlaylist.id, page);
+    }
+
+    loadMusics(pid?: number, page?: number)
+    {
+        this._musicService.loadMusics(pid, page);
+    }
+
+    updateUser(user: User)
+    {
         this.user = user;
         if (this.user.connected) {
             this._playlistService.loadPlaylists();
         }
     }
 
-    logout() {
+    logout()
+    {
         this._http.get(this._logoutUrl)
             .map(res => res.json())
             .subscribe(
@@ -103,7 +123,8 @@ export class AppComponent implements OnInit{
             );
     }
 
-    ngOnInit() {
+    ngOnInit()
+    {
         this._http.get(this._usernameUrl)
             .map(res => res.json().data)
             .subscribe(

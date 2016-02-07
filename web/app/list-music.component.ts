@@ -20,6 +20,11 @@ import {PlaylistService} from './playlist-service.js';
                 (click)="onSelect(music)">
                 <span class="badge">{{music.id}}</span> {{music.name}}
             </button>
+            <button *ngIf="musics"
+                [class.disabled]="(musics.length % 20) !== 0"
+                class="list-group-item list-group-item-info"
+                (click)="loadMore()"
+            >Load more</button>
         </div>
     `,
     inputs: ['playlists', 'musics', 'selectedMusic']
@@ -31,15 +36,24 @@ export class ListMusicComponent {
     public selectedMusic: Music;
     @Output() selectedMusicChanged: EventEmitter<Music> = new EventEmitter();
     @Output() selectedPlaylistChanged: EventEmitter<Playlist> = new EventEmitter();
-
+    @Output() loadMoreAsked: EventEmitter<number> = new EventEmitter();
     constructor() {}
 
-    onSelect(music: Music) {
+    onSelect(music: Music)
+    {
         this.selectedMusicChanged.emit(music);
     }
 
     selectPlaylist(playlist: Playlist)
     {
+        if (playlist === undefined) {
+            playlist = {'id' : undefined, 'name' : undefined};
+        }
         this.selectedPlaylistChanged.emit(playlist);
+    }
+
+    loadMore()
+    {
+        this.loadMoreAsked.emit(this.musics.length);
     }
 }
