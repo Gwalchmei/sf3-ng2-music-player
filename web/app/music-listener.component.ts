@@ -1,11 +1,12 @@
 import {Component, OnChanges, SimpleChange, EventEmitter, Output} from 'angular2/core';
 import {Music} from './music.js';
 import {BASEURL} from './base-url.js';
+import {MusicService} from './music.service.js';
 
 @Component({
     selector: 'music-listener',
     template: `
-        <audio (ended)="onEnded()"
+        <audio (ended)="onEnded($event)"
             (durationchange)="onDurationChanged($event)"
             (timeupdate)="onTimeUpdate($event)"
             class="hidden"
@@ -24,7 +25,7 @@ import {BASEURL} from './base-url.js';
                     <div (click)="repeatMusic()" class="btn btn-default">
                         <span class="glyphicon glyphicon-repeat"></span>
                     </div>
-                    <div (click)="onEnded()" class="btn btn-default">
+                    <div (click)="next()" class="btn btn-default">
                         <span class="glyphicon glyphicon-fast-forward"></span>
                     </div>
                     <div class="btn btn-default" (click)="mute()">
@@ -76,11 +77,12 @@ export class MusicListenerComponent implements OnChanges {
     public ratio: number;
     public volume: number;
     private _volumeDrag: boolean = false;
-    @Output() musicEnded: EventEmitter<Music> = new EventEmitter();
+    @Output() nextAsked: EventEmitter<Music> = new EventEmitter();
     @Output() previousAsked: EventEmitter<Music> = new EventEmitter();
 
+    constructor(private _musicService: MusicService) {}
     onEnded() {
-        this.musicEnded.emit(this.music);
+        this.next();
     }
 
     onSourceError(event) {
@@ -88,17 +90,20 @@ export class MusicListenerComponent implements OnChanges {
     }
 
     onDurationChanged(event) {
-        var newDuration = event.target.duration;
-        if (isFinite(newDuration) && newDuration>0) {
-            this.duration = newDuration;
+        if (this.music.duration === null) {
+            var newDuration = event.target.duration;
+            if (isFinite(newDuration) && newDuration > 0) {
+                this.duration = parseFloat(newDuration.toFixed(2));
+                this.music.duration = this.duration;
+                this._musicService.updateMusic(this.music);
+            }
         }
     }
 
     onTimeUpdate(event) {
-        this.currentTime = event.target.currentTime;
+        this.currentTime = parseFloat(event.target.currentTime.toFixed(2));
 
         this.ratio = (this.currentTime/this.duration) * 100;
-
     }
 
     playPause() {
@@ -116,6 +121,10 @@ export class MusicListenerComponent implements OnChanges {
 
     previous() {
         this.previousAsked.emit(this.music);
+    }
+
+    next() {
+        this.nextAsked.emit(this.music);
     }
 
     mute() {
@@ -171,6 +180,7 @@ export class MusicListenerComponent implements OnChanges {
         }
         this.volume = this.audio.volume*100;
         this.audio.load();
+        this.duration = this.music.duration === null ? 200 : this.music.duration;
         this.audio.play();
     }
 
