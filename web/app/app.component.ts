@@ -43,7 +43,7 @@ import {BASEURL} from './base-url.js';
                         <div class="row-fluid">
                             <music-listener
                                 [music]="selectedMusic"
-                                (musicEnded)="onMusicEnd($event)"
+                                (nextAsked)="onNextAsked($event)"
                                 (previousAsked)="onPreviousAsked($event)"
                             ></music-listener>
                         </div>
@@ -80,7 +80,7 @@ export class AppComponent implements OnInit{
         this.loadMusics(this.selectedPlaylist.id);
     }
 
-    onMusicEnd(music: Music)
+    onNextAsked(music: Music)
     {
         var indexOfNext = this.musics.indexOf(music)+1;
         var musicLength = this.musics.length;
@@ -135,6 +135,17 @@ export class AppComponent implements OnInit{
             );
     }
 
+    updateMusics(updatedMusics) {
+        if (this.selectedMusic !== undefined) {
+            updatedMusics.forEach(function(music){
+                if (this.selectedMusic.id == music.id) {
+                    this.selectedMusic = music;
+                }
+            });
+        }
+        this.musics = updatedMusics;
+    }
+
     ngOnInit()
     {
         this._http.get(this._usernameUrl)
@@ -144,6 +155,6 @@ export class AppComponent implements OnInit{
                 error => this.updateUser(new User('','',false))
             );
         this._playlistService.playlists$.subscribe(updatedPlaylists => this.playlists = updatedPlaylists);
-        this._musicService.musics$.subscribe(updatedMusics => this.musics = updatedMusics);
+        this._musicService.musics$.subscribe(updatedMusics => this.updateMusics(updatedMusics));
     }
 }
