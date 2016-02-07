@@ -44,6 +44,7 @@ import {BASEURL} from './base-url.js';
                             <music-listener
                                 [music]="selectedMusic"
                                 (musicEnded)="onMusicEnd($event)"
+                                (previousAsked)="onPreviousAsked($event)"
                             ></music-listener>
                         </div>
                         <div class="row-fluid">
@@ -85,13 +86,24 @@ export class AppComponent implements OnInit{
         var musicLength = this.musics.length;
         if (indexOfNext < musicLength) {
             this.selectedMusic = this.musics[indexOfNext];
-            /*if ((musicLength%20 === 0) && (musicLength-indexOfNext < 5)) {
+            if ((musicLength%20 === 0) && (musicLength-indexOfNext < 5)) {
                 this.loadMore(musicLength);
-            }*/
+            }
         } else {
             this.selectedMusic = this.musics[0];
         }
 
+    }
+
+    onPreviousAsked(music: Music)
+    {
+        var indexOfPrev = this.musics.indexOf(music)-1;
+        var musicLength = this.musics.length;
+        if (indexOfPrev < 0) {
+            this.selectedMusic = this.musics[musicLength-1];
+        } else {
+            this.selectedMusic = this.musics[indexOfPrev];
+        }
     }
 
     loadMore(length: number)
@@ -132,6 +144,6 @@ export class AppComponent implements OnInit{
                 error => this.updateUser(new User('','',false))
             );
         this._playlistService.playlists$.subscribe(updatedPlaylists => this.playlists = updatedPlaylists);
-        this._musicService.musics$.subscribe(updatedMusics => {this.musics = updatedMusics; this.selectedMusic = this.musics[0];});
+        this._musicService.musics$.subscribe(updatedMusics => this.musics = updatedMusics);
     }
 }
