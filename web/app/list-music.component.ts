@@ -19,7 +19,9 @@ import {PlaylistService} from './playlist-service.js';
                 class="list-group-item"
                 [class.list-group-item-success]="music === selectedMusic"
                 (click)="onSelect(music)">
-                <span class="badge">{{music.id}}</span> {{music.name}}
+                {{music.name}}
+                <span class="badge">{{music.id}}</span>
+                <span class="badge">{{music.duration}}</span>
             </button>
             <button *ngIf="musics"
                 [class.disabled]="(musics.length % 20) !== 0"
