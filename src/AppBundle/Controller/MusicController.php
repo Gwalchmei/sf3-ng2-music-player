@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Music;
+use AppBundle\Form\MusicType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -47,25 +48,73 @@ class MusicController extends Controller
     /**
      * @Route("/", name="get_music")
      * @Method("GET")
+     * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function getAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
-        $musics = $this->getDoctrine()->getManager()->getRepository("AppBundle:Music")->myFindAll(
+        /** @var \AppBundle\Entity\Repository\MusicRepository $musicRepository */
+        $musicRepository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Music");
+        $musics = $musicRepository->myFindAll(
             $request->get('pid'),
             $request->get('page')
         );
         $output = array();
         foreach ($musics as $music) {
+            /** @var Music $music */
             $output[] = array(
                 'id' => $music->getId(),
-                'name' => $music->getName()
+                'name' => $music->getName(),
+                'duration' => $music->getDuration()
             );
         }
 
         $response = new JsonResponse();
         $response->setData(array('data' => $output));
+
+        return $response;
+    }
+
+    /**
+     * @Route("/{id}", name="update_music", requirements={"id"="[0-9]+"})
+     * @Method("PUT")
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
+        $em = $this->getDoctrine()->getManager();
+        $music = $em->getRepository('AppBundle:Music')->find($id);
+        if (!$music instanceof Music) {
+            throw $this->createNotFoundException('Music not found');
+        }
+        $form = $this->createForm(
+            MusicType::class,
+            $music,
+            array(
+                'method' => 'PUT'
+            )
+        );
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($music);
+            $em->flush();
+        }
+
+        $response = new JsonResponse();
+        $response->setData(
+            array(
+                'id' => $music->getId(),
+                'name' => $music->getName(),
+                'duration' => $music->getDuration()
+            )
+        );
 
         return $response;
     }
