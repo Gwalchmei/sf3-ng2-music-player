@@ -1,5 +1,5 @@
 import {Injectable} from 'angular2/core';
-import {Http}       from 'angular2/http';
+import {Http, Headers}       from 'angular2/http';
 import {Music}      from './music.js';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
@@ -41,5 +41,20 @@ export class MusicService {
             // Push the new list of musics into the Observable stream
             this._musicsObserver.next(this._dataStore.musics);
         }, error => console.log('Could not load musics.'));
+    }
+
+    updateMusic(music: Music) {
+        var params = "music[name]="+music.name+"&music[duration]="+music.duration+"&_method=PUT";
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+
+        this._http.post(BASEURL+"music/"+music.id, params, {headers : headers})
+            .map(response => response.json()).subscribe(data => {
+                this._dataStore.musics.forEach((music, i) => {
+                    if (music.id === data.id) { this._dataStore.musics[i] = data; }
+                });
+
+                this._musicsObserver.next(this._dataStore.musics);
+            }, error => console.log('Could not update music.'));
     }
 }
