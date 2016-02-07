@@ -20,6 +20,7 @@ class MusicRepository extends EntityRepository
             ->from($this->_entityName, 'm')
             ->leftJoin('m.playlists', 'p')
             ->setFirstResult($offset*20)->setMaxResults(20)
+            ->groupBy('m') // for distinct values, $qb->select('distinct m') return array instead of objects
         ;
         if (isset($pid)) {
             $qb->andWhere($qb->expr()->eq('p.id', ':pid'))->setParameter('pid', $pid);
