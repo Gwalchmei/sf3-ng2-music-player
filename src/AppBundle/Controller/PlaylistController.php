@@ -29,13 +29,12 @@ class PlaylistController extends Controller
     public function getAction()
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
-        $playlists = $this->getDoctrine()->getManager()->getRepository('AppBundle:Playlist')->myFindAll();
+        $playlists = $this->getDoctrine()->getManager()->getRepository('AppBundle:Playlist')->findAll();
         $output = array();
         foreach ($playlists as $playlist) {
-            $output[$playlist->getId()] = array(
+            $output[] = array(
                 'id' => $playlist->getId(),
-                'name' => $playlist->getName(),
-                'musics' => $playlist->getMusics()->map(function($m){return $m->getId();})->toArray()
+                'name' => $playlist->getName()
             );
         }
         $response = new JsonResponse();
