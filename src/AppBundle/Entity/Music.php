@@ -37,9 +37,14 @@ class Music
     /**
      * @var string
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\File(mimeTypes={"audio/mpeg"})
      */
     protected $path;
+
+    /**
+     * @var float
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    protected $duration;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Playlist", inversedBy="musics", cascade={"all"})
@@ -98,6 +103,25 @@ class Music
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * @param $duration
+     * @return $this
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDuration()
+    {
+        return $this->duration;
     }
 
     /**

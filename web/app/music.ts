@@ -1,4 +1,5 @@
 export interface Music {
     id : number,
-    name: string
+    name: string,
+    duration?: number
 }
