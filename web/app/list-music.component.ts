@@ -9,7 +9,8 @@ import {PlaylistService} from './playlist-service.js';
 @Component({
     selector: 'list-music',
     template: `
-        <select class="form-control" title="Select a playlist">
+        <select class="form-control">
+            <option>Select a playlist</option>
             <option value="0" (click)="selectPlaylist()">All</option>
             <option *ngFor="#playlist of playlists" value="{{ playlist.id }}" (click)="selectPlaylist(playlist)">{{playlist.name}}</option>
         </select>
@@ -27,7 +28,13 @@ import {PlaylistService} from './playlist-service.js';
             >Load more</button>
         </div>
     `,
-    inputs: ['playlists', 'musics', 'selectedMusic']
+    inputs: ['playlists', 'musics', 'selectedMusic'],
+    styles: [`
+        .list-group {
+            max-height: calc(100vh - 124px);
+            overflow: auto;
+        }
+    `]
 })
 
 export class ListMusicComponent {
