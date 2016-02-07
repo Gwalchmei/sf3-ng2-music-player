@@ -3,48 +3,43 @@ import {Response}    from 'angular2/http';
 import {Music} from './music.js';
 import {MusicService} from './music.service.js';
 import {User} from './user.js';
+import {Playlist} from './playlist.js';
+import {PlaylistService} from './playlist-service.js';
 
 @Component({
     selector: 'list-music',
     template: `
-        <h2>My Musics</h2>
-        <ul id="playlist" class="musics">
-            <li *ngFor="#music of musics"
-                id="li{{music.id}}"
-                [class.selected]="music === selectedMusic"
+        <select class="form-control" title="Select a playlist">
+            <option value="0" (click)="selectPlaylist()">All</option>
+            <option *ngFor="#playlist of playlists" value="{{ playlist.id }}" (click)="selectPlaylist(playlist)">{{playlist.name}}</option>
+        </select>
+        <div id="playlist" class="list-group">
+            <button *ngFor="#music of musics"
+                class="list-group-item"
+                [class.list-group-item-success]="music === selectedMusic"
                 (click)="onSelect(music)">
-                <span class="badge"></span> {{music.filename}}
-            </li>
-        </ul>
+                <span class="badge">{{music.id}}</span> {{music.name}}
+            </button>
+        </div>
     `,
-    inputs: ['musics']
+    inputs: ['playlists', 'musics', 'selectedMusic']
 })
 
-export class ListMusicComponent implements OnInit {
+export class ListMusicComponent {
+    public playlists: Playlist[];
     public musics: Music[];
     public selectedMusic: Music;
-    @Output() selectionChanged: EventEmitter = new EventEmitter();
-    @Output() errorUserNotConnected: EventEmitter = new EventEmitter();
+    @Output() selectedMusicChanged: EventEmitter<Music> = new EventEmitter();
+    @Output() selectedPlaylistChanged: EventEmitter<Playlist> = new EventEmitter();
 
-    constructor(private _musicService: MusicService) {}
+    constructor() {}
+
     onSelect(music: Music) {
-        this.selectedMusic = music;
-        this.selectionChanged.emit(music);
+        this.selectedMusicChanged.emit(music);
     }
-    getMusics() {
-        this._musicService.getMusics().subscribe(
-                musics => this.musics = musics,
-                error => this.handleError(error));
-    }
-    handleError(error: Response) {
-        //alert(error.status+': '+error.statusText);
-        if (error.status == 401) {
-            var data = error.json().data;
-            var user = new User(data.last_username, '', false);
-            this.errorUserNotConnected.emit(user);
-        }
-    }
-    ngOnInit() {
-        this.getMusics();
+
+    selectPlaylist(playlist: Playlist)
+    {
+        this.selectedPlaylistChanged.emit(playlist);
     }
 }
