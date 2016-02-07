@@ -16,7 +16,7 @@ class MusicRepository extends EntityRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb
-            ->select('m, p')
+            ->select('m')
             ->from($this->_entityName, 'm')
             ->leftJoin('m.playlists', 'p')
             ->setFirstResult($offset*20)->setMaxResults(20)

@@ -58,15 +58,45 @@ class MusicController extends Controller
         );
         $output = array();
         foreach ($musics as $music) {
-            $output[$music->getId()] = array(
+            $output[] = array(
                 'id' => $music->getId(),
-                'name' => $music->getName(),
-                'playlists' => $music->getPlaylists()->map(function($p){return $p->getId();})->toArray()
+                'name' => $music->getName()
             );
         }
 
         $response = new JsonResponse();
         $response->setData(array('data' => $output));
+
+        return $response;
+    }
+
+    /**
+     * Update db with music folder
+     * Assume music table is empty (or at least there will be no conflict on unique path)
+     * @Route("/admin-import/", name="music_admin_import")
+     * @Method("GET")
+     */
+    public function adminImportAction()
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
+        $em = $this->getDoctrine()->getManager();
+        $list = shell_exec('ls music/');
+        $array = explode("\n", trim($list));
+        $length = count($array);
+        for ($i = 0; $i<$length; $i++) {
+            $path = $array[$i];
+            $music = new Music();
+            $music->setName($path)->setPath($path);
+            $em->persist($music);
+            if (($i % 20) === 0) {
+                $em->flush();
+                $em->clear();
+            }
+        }
+        $em->flush();
+        $em->clear();
+        $response = new JsonResponse();
+        $response->setData(array('i' => $i, 'length' => $length));
 
         return $response;
     }
