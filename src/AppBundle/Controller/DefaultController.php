@@ -21,22 +21,4 @@ class DefaultController extends Controller
             'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
         ]);
     }
-
-    /**
-     * @Route("/list/", name="list_music")
-     */
-    public function listAction()
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
-        $list = shell_exec('ls music/');
-        $array = explode("\n", trim($list));
-        $output = array();
-        foreach ($array as $key => $filename) {
-            $output[] = array('id' => $key, 'filename' => $filename);
-        }
-        $response = new JsonResponse();
-        $response->setData(array('data' => $output));
-
-        return $response;
-    }
 }
