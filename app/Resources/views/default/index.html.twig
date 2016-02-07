@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block stylesheets %}
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style>body{padding-top:70px;}</style>
 {% endblock %}
 
 {% block javascripts %}
@@ -20,16 +21,16 @@
     <script src="{{ asset('node_modules/angular2/bundles/http.dev.js') }}"></script>
 
     <script>
-      System.config({
-        packages: {
-          app: {
-            format: 'register',
-            defaultExtension: 'js',
-              baseUrl: "{{ asset('') }}"
-          }
-        }
-      });
-      System.import("{{ asset('app/main.js') }}")
-            .then(null, console.error.bind(console));
+        System.config({
+            packages: {
+                app: {
+                    format: 'register',
+                    defaultExtension: 'js',
+                    baseUrl: "{{ asset('') }}"
+                }
+            },
+            defaultJSExtension: true
+        });
+        System.import("{{ asset('app/main.js') }}").then(null, console.error.bind(console));
     </script>
 {% endblock %}
