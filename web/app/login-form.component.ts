@@ -23,7 +23,7 @@ import {User} from './user.js';
 export class LoginFormComponent {
     private _loginCheckUrl: string = BASEURL+'login_check';
     public user: User;
-    @Output() connectionSuccess: EventEmitter = new EventEmitter();
+    @Output() connectionSuccess: EventEmitter<User> = new EventEmitter();
 
     constructor(private _http: Http){}
 
