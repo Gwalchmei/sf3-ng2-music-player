@@ -49,7 +49,7 @@ import {BASEURL} from './base-url.js';
                             ></music-listener>
                         </div>
                         <div class="row-fluid">
-                            <music-form [music]="selectedMusic"></music-form>
+                            <music-form [music]="selectedMusic" [playlists]="playlists"></music-form>
                         </div>
                     </div>
                 </div>

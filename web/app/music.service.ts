@@ -57,4 +57,9 @@ export class MusicService {
                 this._musicsObserver.next(this._dataStore.musics);
             }, error => console.log('Could not update music.'));
     }
+
+    addToPlaylist(mid: number, pid: number) {
+        this._http.put(BASEURL+"music/toplaylist/"+mid+"/"+pid, null, null)
+            .map(response => response.json()).subscribe(data => {}, error => alert('Impossible to add to playlist'));
+    }
 }
