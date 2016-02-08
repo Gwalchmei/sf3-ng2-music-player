@@ -1,5 +1,5 @@
 import {Injectable} from 'angular2/core';
-import {Http} from 'angular2/http';
+import {Http, Headers} from 'angular2/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 import {Playlist} from './playlist.js';
@@ -29,5 +29,16 @@ export class PlaylistService {
             // Push the new list of playlists into the Observable stream
             this._playlistsObserver.next(this._dataStore.playlists);
         }, error => console.log('Could not load playlists.'));
+    }
+
+    createPlaylist(playlist: Playlist) {
+        var params = "playlist[name]="+playlist.name;
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        this._http.post(BASEURL+"playlist/", params, {headers: headers}).map(response => response.json()).subscribe(data => {
+                this._dataStore.playlists.push(data);
+                this._playlistsObserver.next(this._dataStore.playlists);
+            }, error => console.log(error)
+        );
     }
 }

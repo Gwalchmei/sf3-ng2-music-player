@@ -8,10 +8,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Playlist;
+use AppBundle\Form\PlaylistType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/playlist")
@@ -39,6 +42,43 @@ class PlaylistController extends Controller
         }
         $response = new JsonResponse();
         $response->setData(array('data' => $output));
+
+        return $response;
+    }
+
+    /**
+     * @Route("/", name="create_playlist")
+     * @Method("POST")
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function createAction(Request $request)
+    {
+        $playlist = new Playlist();
+        $form = $this->createForm(
+            PlaylistType::class,
+            $playlist
+        );
+        $form->handleRequest($request);
+        $response = new JsonResponse();
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($playlist);
+            $em->flush();
+
+            $response->setData(
+                array(
+                    'id' => $playlist->getId(),
+                    'name' => $playlist->getName()
+                )
+            );
+
+            return $response;
+        }
+
+
+        $response->isServerError();
 
         return $response;
     }
