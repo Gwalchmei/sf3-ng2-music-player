@@ -138,11 +138,13 @@ export class AppComponent implements OnInit{
 
     updateMusics(updatedMusics) {
         if (this.selectedMusic !== undefined) {
+            var selectedMusic = this.selectedMusic;
             updatedMusics.forEach(function(music){
-                if (this.selectedMusic.id == music.id) {
-                    this.selectedMusic = music;
+                if (selectedMusic.id == music.id) {
+                    selectedMusic = music;
                 }
             });
+            this.selectedMusic = selectedMusic;
         }
         this.musics = updatedMusics;
     }
