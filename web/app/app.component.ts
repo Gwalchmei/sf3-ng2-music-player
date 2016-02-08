@@ -10,6 +10,7 @@ import {User} from './user.js';
 import {ListMusicComponent} from './list-music.component.js';
 import {MusicFormComponent} from './music-form.component.js';
 import {BASEURL} from './base-url.js';
+import {PlaylistFormComponent} from './playlist-form.component.js';
 
 @Component({
     selector: 'my-app',
@@ -30,7 +31,7 @@ import {BASEURL} from './base-url.js';
                         </div>
                     </div>
                 </nav>
-                <div class="row-fluid">
+                <div class="row">
                     <list-music
                         class="col-sm-6"
                         (selectedMusicChanged)="onMusicSelect($event)"
@@ -40,23 +41,23 @@ import {BASEURL} from './base-url.js';
                         [musics]="musics"
                         [selectedMusic]="selectedMusic"
                     ></list-music>
-                    <div *ngIf="selectedMusic" class="col-sm-6">
-                        <div class="row-fluid">
+                    <div class="col-sm-6">
+                        <div *ngIf="selectedMusic">
                             <music-listener
                                 [music]="selectedMusic"
                                 (nextAsked)="onNextAsked($event)"
                                 (previousAsked)="onPreviousAsked($event)"
                             ></music-listener>
-                        </div>
-                        <div class="row-fluid">
                             <music-form [music]="selectedMusic" [playlists]="playlists"></music-form>
+                            <hr>
                         </div>
+                        <playlist-form></playlist-form>
                     </div>
                 </div>
             </div>
         </div>
     `,
-    directives: [MusicListenerComponent, LoginFormComponent, ListMusicComponent, MusicFormComponent],
+    directives: [MusicListenerComponent, LoginFormComponent, ListMusicComponent, MusicFormComponent, PlaylistFormComponent],
     providers: [HTTP_PROVIDERS, MusicService, PlaylistService]
 })
 export class AppComponent implements OnInit{
