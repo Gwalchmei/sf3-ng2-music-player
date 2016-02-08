@@ -8,6 +8,7 @@ import {MusicListenerComponent} from './music-listener.component.js';
 import {LoginFormComponent} from './login-form.component.js';
 import {User} from './user.js';
 import {ListMusicComponent} from './list-music.component.js';
+import {MusicFormComponent} from './music-form.component.js';
 import {BASEURL} from './base-url.js';
 
 @Component({
@@ -48,14 +49,14 @@ import {BASEURL} from './base-url.js';
                             ></music-listener>
                         </div>
                         <div class="row-fluid">
-                            {{ selectedMusic.name }}
+                            <music-form [music]="selectedMusic"></music-form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     `,
-    directives: [MusicListenerComponent, LoginFormComponent, ListMusicComponent],
+    directives: [MusicListenerComponent, LoginFormComponent, ListMusicComponent, MusicFormComponent],
     providers: [HTTP_PROVIDERS, MusicService, PlaylistService]
 })
 export class AppComponent implements OnInit{
