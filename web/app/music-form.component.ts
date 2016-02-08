@@ -8,20 +8,24 @@ import {Playlist} from './playlist.js';
     selector: 'music-form',
     template: `
         <div class="row">
-            <form #f="ngForm" (ngSubmit)="submit()" class="form-inline">
-                <label for="name">Name</label>
-                <input type="text" [(ngModel)]="music.name" required class="form-control">
-                <button type="submit" class="btn btn-default">Update !</button>
-            </form>
+            <div class="col-xs-12">
+                <form #f="ngForm" (ngSubmit)="submit()" class="form-inline">
+                    <label for="name">Music name :</label>
+                    <input type="text" [(ngModel)]="music.name" required class="form-control">
+                    <button type="submit" class="btn btn-default">Update !</button>
+                </form>
+            </div>
         </div>
         <hr>
         <div class="row">
-            <div class="form-inline">
-                <select class="form-control">
-                    <option [selected]="!_pid">Select a playlist</option>
-                    <option *ngFor="#playlist of playlists" value="{{playlist.id}}" (click)="selectPlaylist(playlist.id)">{{playlist.name}}</option>
-                </select>
-                <button (click)="addToPlaylist()" class="btn btn-default">Add to playlist !</button>
+            <div class="col-xs-12">
+                <div class="form-inline">
+                    <select class="form-control">
+                        <option [selected]="!_pid">Select a playlist</option>
+                        <option *ngFor="#playlist of playlists" value="{{playlist.id}}" (click)="selectPlaylist(playlist.id)">{{playlist.name}}</option>
+                    </select>
+                    <button (click)="addToPlaylist()" class="btn btn-default">Add to playlist !</button>
+                </div>
             </div>
         </div>
     `,
