@@ -25,17 +25,19 @@ import {Playlist} from './playlist.js';
                         <option *ngFor="#playlist of playlists" value="{{playlist.id}}" (click)="selectPlaylist(playlist.id)">{{playlist.name}}</option>
                     </select>
                     <button (click)="addToPlaylist()" class="btn btn-default">Add to playlist !</button>
+                    <button (click)="removeFromPlaylist()" class="btn btn-danger" [class.disabled]="!selectedPlaylist.id">Remove from current playlist !</button>
                 </div>
             </div>
         </div>
     `,
-    inputs: ['music', 'playlists'],
+    inputs: ['music', 'playlists', 'selectedPlaylist'],
     directives: [FORM_DIRECTIVES]
 })
 
 export class MusicFormComponent {
     public music: Music;
     public playlists: Playlist[];
+    public selectedPlaylist: Playlist;
     private _pid: number;
     constructor(private _musicService: MusicService) {}
 
@@ -51,6 +53,12 @@ export class MusicFormComponent {
         if (this._pid !== undefined) {
             this._musicService.addToPlaylist(this.music.id, this._pid);
             this._pid = undefined;
+        }
+    }
+
+    removeFromPlaylist() {
+        if (this.selectedPlaylist.id !== undefined) {
+            this._musicService.removeFromPlaylist(this.music.id);
         }
     }
 }
