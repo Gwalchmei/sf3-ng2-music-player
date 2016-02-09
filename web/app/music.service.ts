@@ -67,4 +67,20 @@ export class MusicService {
         this._http.put(BASEURL+"music/toplaylist/"+mid+"/"+pid, null, null)
             .map(response => response.json()).subscribe(data => {}, error => alert('Impossible to add to playlist'));
     }
+
+    removeFromPlaylist(mid: number) {
+        if (this._lastPid !== undefined) {
+            this._http.put(BASEURL + "music/fromplaylist/" + mid + "/" + this._lastPid, null, null)
+                .map(response => response.json()).subscribe(data => {
+                    if (data == 'success') {
+                        this._dataStore.musics.forEach((m, index) => {
+                            if (m.id == mid) {
+                                this._dataStore.musics.splice(index, 1);
+                            }
+                        });
+                        this._musicsObserver.next(this._dataStore.musics);
+                    }
+                }, error => console.log(error));
+        }
+    }
 }
