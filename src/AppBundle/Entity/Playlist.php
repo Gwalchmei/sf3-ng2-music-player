@@ -34,7 +34,7 @@ class Playlist
     protected $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Music", mappedBy="playlists", cascade={"all"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Music", mappedBy="playlists", cascade={"persist"})
      */
     protected $musics;
 
