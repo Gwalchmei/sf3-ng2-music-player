@@ -41,4 +41,15 @@ export class PlaylistService {
             }, error => console.log(error)
         );
     }
+
+    deletePlaylist(playlist: Playlist) {
+        this._http.delete(BASEURL+"playlist/"+playlist.id).map(response => response.json()).subscribe(data => {
+            if (data == 'success') {
+                this._dataStore.playlists.forEach((p, index) => {
+                    if (p.id == playlist.id) {this._dataStore.playlists.splice(index, 1);}
+                });
+                this._playlistsObserver.next(this._dataStore.playlists);
+            }
+        })
+    }
 }
