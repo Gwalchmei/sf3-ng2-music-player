@@ -179,4 +179,33 @@ class MusicController extends Controller
 
         return $response;
     }
+
+    /**
+     * @Route("/fromplaylist/{mid}/{pid}", name="music_remove_from_playlist", requirements={"mid"="\d+", "pid"="\d+"})
+     * @param $mid
+     * @param $pid
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function fromPlaylistAction($mid, $pid)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
+        $em = $this->getDoctrine()->getManager();
+        $music = $em->getRepository('AppBundle:Music')->find($mid);
+        if(!$music instanceof Music) {
+            throw $this->createNotFoundException('Music not found');
+        }
+        $playlist = $em->getRepository('AppBundle:Playlist')->find($pid);
+        if (!$playlist instanceof Playlist) {
+            throw $this->createNotFoundException('Playlist not found');
+        }
+        $music->removePlaylist($playlist);
+        $em->persist($music);
+        $em->flush();
+
+        $response = new JsonResponse();
+        $response->setData(array('success'));
+
+        return $response;
+    }
 }
