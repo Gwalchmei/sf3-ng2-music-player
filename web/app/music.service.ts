@@ -44,7 +44,12 @@ export class MusicService {
     }
 
     updateMusic(music: Music) {
-        var params = "music[name]="+music.name+"&music[duration]="+music.duration+"&_method=PUT";
+        var params = "music[name]="+music.name+"&music[duration]=";
+        /* if music.duration is null, params += music.duration is the same as params += 'null' */
+        if (music.duration != null && isFinite(music.duration)) {
+            params += music.duration;
+        }
+        params += "&_method=PUT";
         var headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
