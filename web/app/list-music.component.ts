@@ -24,7 +24,7 @@ import {PlaylistService} from './playlist-service.js';
                 <span class="badge">{{music.duration}}</span>
             </button>
             <button *ngIf="musics"
-                [class.disabled]="(musics.length % 20) !== 0"
+                [class.disabled]="(musics.length === 0 || (musics.length % 20) !== 0)"
                 class="list-group-item list-group-item-info"
                 (click)="loadMore()"
             >Load more</button>
@@ -63,6 +63,8 @@ export class ListMusicComponent {
 
     loadMore()
     {
-        this.loadMoreAsked.emit(this.musics.length);
+        if (this.musics.length !== 0 && (this.musics.length % 20) === 0) {
+            this.loadMoreAsked.emit(this.musics.length);
+        }
     }
 }
