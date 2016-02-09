@@ -27,6 +27,7 @@ class MusicController extends Controller
 {
     /**
      * @Route("/stream/{id}", name="stream_music", requirements={"id" = "[0-9]+"})
+     * @Method("GET")
      * @param integer $id
      * @return StreamedResponse
      */
@@ -153,6 +154,7 @@ class MusicController extends Controller
 
     /**
      * @Route("/toplaylist/{mid}/{pid}", name="music_add_to_playlist", requirements={"mid"="\d+", "pid"="\d+"})
+     * @Method("PUT")
      * @param $mid
      * @param $pid
      * @return JsonResponse
@@ -182,6 +184,7 @@ class MusicController extends Controller
 
     /**
      * @Route("/fromplaylist/{mid}/{pid}", name="music_remove_from_playlist", requirements={"mid"="\d+", "pid"="\d+"})
+     * @Method("PUT")
      * @param $mid
      * @param $pid
      * @return JsonResponse
