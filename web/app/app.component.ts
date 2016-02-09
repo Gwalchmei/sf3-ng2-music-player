@@ -48,10 +48,10 @@ import {PlaylistFormComponent} from './playlist-form.component.js';
                                 (nextAsked)="onNextAsked($event)"
                                 (previousAsked)="onPreviousAsked($event)"
                             ></music-listener>
-                            <music-form [music]="selectedMusic" [playlists]="playlists"></music-form>
+                            <music-form [music]="selectedMusic" [playlists]="playlists" [selectedPlaylist]="selectedPlaylist"></music-form>
                             <hr>
                         </div>
-                        <playlist-form></playlist-form>
+                        <playlist-form [selectedPlaylist]="selectedPlaylist"></playlist-form>
                     </div>
                 </div>
             </div>
