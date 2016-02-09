@@ -82,4 +82,27 @@ class PlaylistController extends Controller
 
         return $response;
     }
+
+    /**
+     * @Route("/{id}", name="delete_playlist", requirements={"id"="\d+"})
+     * @Method("DELETE")
+     * @param $id
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function deleteAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $playlist = $em->getRepository('AppBundle:Playlist')->find($id);
+        if (!$playlist instanceof Playlist) {
+            throw $this->createNotFoundException('Playlist not found');
+        }
+        $em->remove($playlist);
+        $em->flush();
+
+        $response = new JsonResponse();
+        $response->setData(array('success'));
+
+        return $response;
+    }
 }
