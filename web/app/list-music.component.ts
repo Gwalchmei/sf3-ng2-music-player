@@ -4,7 +4,6 @@ import {Music} from './music.js';
 import {MusicService} from './music.service.js';
 import {User} from './user.js';
 import {Playlist} from './playlist.js';
-import {PlaylistService} from './playlist-service.js';
 
 @Component({
     selector: 'list-music',

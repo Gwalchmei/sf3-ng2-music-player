@@ -3,7 +3,7 @@ import {HTTP_PROVIDERS, Response, Http}    from 'angular2/http';
 import {Music} from './music.js';
 import {MusicService} from './music.service.js';
 import {Playlist} from './playlist.js';
-import {PlaylistService} from './playlist-service.js';
+import {PlaylistService} from './playlist.service.js';
 import {MusicListenerComponent} from './music-listener.component.js';
 import {LoginFormComponent} from './login-form.component.js';
 import {User} from './user.js';

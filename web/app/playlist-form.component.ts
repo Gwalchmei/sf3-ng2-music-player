@@ -1,6 +1,6 @@
 import {Component} from 'angular2/core';
 import {NgForm, FORM_DIRECTIVES}    from 'angular2/common';
-import {PlaylistService} from './playlist-service.js';
+import {PlaylistService} from './playlist.service.js';
 import {Playlist} from './playlist.js';
 
 @Component({
