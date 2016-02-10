@@ -16,21 +16,23 @@ import {PlaylistFormComponent} from './playlist-form.component.js';
     selector: 'my-app',
     template: `
         <div *ngIf="user">
-            <div *ngIf="!user.connected">
-                <login-form [user]="user" (connectionSuccess)="updateUser($event)"></login-form>
-            </div>
-            <div *ngIf="user.connected">
-                <nav class="navbar navbar-default navbar-fixed-top">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <a class="navbar-brand" href="{{BASEURL}}">MusicPlayer</a>
-                        </div>
-                        <div class="nav navbar-nav">
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="{{BASEURL}}">MusicPlayer</a>
+                    </div>
+                    <div class="nav navbar-nav">
+                        <div *ngIf="user.connected">
                             <span class="navbar-text">Signed in as {{user.username}}</span>
                             <button (click)="logout()" class="btn btn-default navbar-btn">Logout</button>
                         </div>
+                        <div *ngIf="!user.connected">
+                            <login-form [user]="user" (connectionSuccess)="updateUser($event)"></login-form>
+                        </div>
                     </div>
-                </nav>
+                </div>
+            </nav>
+            <div *ngIf="user.connected">
                 <div class="row">
                     <list-music
                         class="col-sm-6"

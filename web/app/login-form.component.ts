@@ -8,14 +8,14 @@ import {User} from './user.js';
     selector: 'login-form',
     inputs: ['user'],
     template: `
-        <form #f="ngForm" (ngSubmit)="authenticate()">
+        <form #f="ngForm" (ngSubmit)="authenticate()" class="navbar-form">
             <label for="username">Username</label>
-            <input type="text" [(ngModel)]="user.username" required>
+            <input type="text" [(ngModel)]="user.username" required class="form-control">
 
             <label for="password">Password</label>
-            <input type="password" [(ngModel)]="user.password" required>
+            <input type="password" [(ngModel)]="user.password" required class="form-control">
 
-            <button type="submit">Login !</button>
+            <button type="submit" class="btn btn-default">Login !</button>
         </form>
     `
 })
